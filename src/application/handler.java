@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,6 +17,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -37,20 +40,26 @@ public class handler implements Initializable {
 	
 	@FXML private TextArea ta;
 	@FXML private TextField file_title;
+	@FXML private TextField viral_input;
 	@FXML private TableView<Table> tableView;
+	@FXML private CheckBox except_logo;
+	@FXML private Button set_button;
+	@FXML private Button cancel_viral_input;
+
 	@FXML private TableColumn<Table, String> t_title;
 	@FXML private TableColumn<Table, String> t_source;
 	@FXML private TableColumn<Table, String> t_content;
 	@FXML private TableColumn<Table, String> t_percent;
+	@FXML private TableColumn<Table, String> t_logo;
 	
-	//ObservableList<Table> list;
-
 	private Stage primaryStage;
 	
+	private ObservableList<Table> original_list = FXCollections.observableArrayList();
+	public ObservableList<Table> previous_list = FXCollections.observableArrayList();
 	public ObservableList<Table> list = FXCollections.observableArrayList();
 	
-	public void add(String title, String source, String content, String percent) {
-		Table a = new Table(new SimpleStringProperty(title), new SimpleStringProperty(source),new SimpleStringProperty(content), new SimpleStringProperty(percent));
+	public void add(String title, String source, String content, String percent, String logo) {
+		Table a = new Table(new SimpleStringProperty(title), new SimpleStringProperty(source),new SimpleStringProperty(content), new SimpleStringProperty(percent), new SimpleStringProperty(logo));
 		list.add(a);
 	}
 	
@@ -60,8 +69,52 @@ public class handler implements Initializable {
 		t_source.setCellValueFactory(cellData -> cellData.getValue().getSource());
 		t_content.setCellValueFactory(cellData -> cellData.getValue().getContent());
 		t_percent.setCellValueFactory(cellData -> cellData.getValue().getPercent());
+		t_logo.setCellValueFactory(cellData -> cellData.getValue().getLogo());
 
 		tableView.setItems(null);
+		
+	     Runtime runtime = Runtime.getRuntime();
+	     try {
+			Process p1 = 
+			 runtime.exec("C:\\Users\\HWH\\Desktop\\Text_analysis_module-divide_module\\text_analysis_module_divide.py");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void except_button() {
+		if(except_logo.isSelected() == true) {
+			ObservableList<Table> except_list = tableView.getItems();
+			ObservableList<Table> except_list1;
+
+			previous_list = tableView.getItems();
+			except_list1 = except_list.filtered(t -> t.getLogo().getValue().equals("0"));
+	
+			tableView.setItems(except_list1);
+		}
+		else {
+			tableView.setItems(previous_list);
+		}
+	}
+	
+	public void viral_input() {
+		int a;
+		a = Integer.parseInt(viral_input.getText());
+		
+		ObservableList<Table> current_list = tableView.getItems();
+		ObservableList<Table> current_list1;
+
+		previous_list = tableView.getItems();
+		current_list1 = current_list.filtered(t -> Integer.parseInt(t.getPercent().getValue()) >= a);
+
+		tableView.setItems(current_list1);
+	}
+	
+	public void cancel_viral_input() {
+		tableView.setItems(original_list);
+		except_logo.setSelected(false);
+		viral_input.setText("");
 	}
 
 	//열기 버튼을 선택했을때의 처리부분
@@ -100,14 +153,16 @@ public class handler implements Initializable {
 	                String num2 = array[1];
 	                String num3 = array[2];
 	                String num4 = array[3];
+	                String num5 = array[4];
 	                
-	                add(num1, num2, num3, num4);
+	                add(num1, num2, num3, num4, num5);
 	                //배열에서 리스트 반환
 	                tmpList = Arrays.asList(array);
 	                String str = String.join(", ", tmpList); 
 	                
 	                ret.add(tmpList);
 	            }
+	            original_list = list;
 				tableView.setItems(list);
 	        }catch(FileNotFoundException error){
 	            error.printStackTrace();

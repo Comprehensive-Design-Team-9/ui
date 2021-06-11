@@ -11,13 +11,16 @@ public class Table {
     private StringProperty source;
     private StringProperty content;
     private StringProperty percent;
+    private StringProperty logo;
 
-    public Table(StringProperty title, StringProperty source, StringProperty content, StringProperty percent) {
+
+    public Table(StringProperty title, StringProperty source, StringProperty content, StringProperty percent, StringProperty logo) {
     	super();
         this.title = title;
         this.source = source;
         this.content = content;
         this.percent = percent;
+        this.logo = logo;
     }
 
     public StringProperty getTitle() {
@@ -50,5 +53,13 @@ public class Table {
 
     public void setPercent(String percent) {
         this.percent.set(percent);
+    }
+    
+    public StringProperty getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo.set(logo);
     }
 }
