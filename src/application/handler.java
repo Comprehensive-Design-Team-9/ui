@@ -74,6 +74,7 @@ public class handler implements Initializable {
 		list.add(a);
 	}
 	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		t_title.setCellValueFactory(cellData -> cellData.getValue().getTitle());
