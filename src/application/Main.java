@@ -29,6 +29,8 @@ public class Main extends Application{
        primaryStage.setTitle("hi");
        primaryStage.setResizable(false);
        primaryStage.setScene(scene);
+       scene.getStylesheets().add(getClass().getResource("application.css").toString());
+
        primaryStage.show();
     }
     

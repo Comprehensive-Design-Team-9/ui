@@ -1,14 +1,25 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
+
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
+import au.com.bytecode.opencsv.bean.CsvToBean;
 
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -58,7 +69,7 @@ public class handler implements Initializable {
 	public ObservableList<Table> previous_list = FXCollections.observableArrayList();
 	public ObservableList<Table> list = FXCollections.observableArrayList();
 	
-	public void add(String title, String source, String content, String percent, String logo) {
+	public void add(String source, String title, String content, String percent, String logo) {
 		Table a = new Table(new SimpleStringProperty(title), new SimpleStringProperty(source),new SimpleStringProperty(content), new SimpleStringProperty(percent), new SimpleStringProperty(logo));
 		list.add(a);
 	}
@@ -70,18 +81,11 @@ public class handler implements Initializable {
 		t_content.setCellValueFactory(cellData -> cellData.getValue().getContent());
 		t_percent.setCellValueFactory(cellData -> cellData.getValue().getPercent());
 		t_logo.setCellValueFactory(cellData -> cellData.getValue().getLogo());
-
-		tableView.setItems(null);
 		
-	     Runtime runtime = Runtime.getRuntime();
-	     try {
-			Process p1 = 
-			 runtime.exec("C:\\Users\\HWH\\Desktop\\Text_analysis_module-divide_module\\text_analysis_module_divide.py");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		tableView.setItems(null);
+	
 	}
+	
 	
 	public void except_button() {
 		if(except_logo.isSelected() == true) {
@@ -99,14 +103,14 @@ public class handler implements Initializable {
 	}
 	
 	public void viral_input() {
-		int a;
-		a = Integer.parseInt(viral_input.getText());
+		float a;
+		a = Float.parseFloat(viral_input.getText());
 		
 		ObservableList<Table> current_list = tableView.getItems();
 		ObservableList<Table> current_list1;
 
 		previous_list = tableView.getItems();
-		current_list1 = current_list.filtered(t -> Integer.parseInt(t.getPercent().getValue()) >= a);
+		current_list1 = current_list.filtered(t -> Float.parseFloat(t.getPercent().getValue()) <= a);
 
 		tableView.setItems(current_list1);
 	}
@@ -118,12 +122,11 @@ public class handler implements Initializable {
 	}
 
 	//열기 버튼을 선택했을때의 처리부분
-	public void selOpenFile(ActionEvent e) {
+	public void selOpenFile(ActionEvent e) throws IOException {
 		//파일추저를 선언합니다.
 		FileChooser fileChooser = new FileChooser();
 		
 		//선언한 파일 추저에서 표시한 옵션을 넣어 줍니다.
-		//이또한 정형화된 표현 입니다. 약간의 수정후 그대로 사용하시면 됩니다.
 		 fileChooser.setTitle("Open Resource File");
 		 fileChooser.getExtensionFilters().addAll(
 		         new ExtensionFilter("Text Files", "*.txt", "*.csv"),
@@ -141,27 +144,72 @@ public class handler implements Initializable {
 			List<List<String>> ret = new ArrayList<List<String>>();
 	        BufferedReader br = null;
 	        
+	        CSVReader csvReader = new CSVReader(new FileReader(file.getPath()));
+	        CSVReader csvReader_sub = new CSVReader(new FileReader("C:\\Users\\HWH\\Desktop\\post_pred2.csv"));
+
+	        List<String[]> readAll = csvReader.readAll();
+	        List<String[]> readAll_sub = csvReader_sub.readAll();
+	        
+	        List<String> table_sub = new ArrayList();
+	        
+	        for(String[] line : readAll_sub) {
+	        	String n0 = line[0];
+	        	String n1 = line[1];
+	        	String n2 = line[2];
+	        	String n3 = line[3];
+	        	String n4 = line[4];
+	        	String n5 = line[5];
+	        	String n6 = line[6];
+	        	String n7 = line[7];
+	        	String n8 = line[8];
+	        	String n9 = line[9];
+	        	String n10 = line[10];
+	        	
+	        	try {
+		        	Float f4, f5, f6, f7, f8, f9, f10, result;
+		        	f4 = Float.parseFloat(n4);
+		        	f5 = Float.parseFloat(n5);
+		        	f6 = Float.parseFloat(n6);
+		        	f7 = Float.parseFloat(n7);
+		        	f8 = Float.parseFloat(n8);
+		        	f9 = Float.parseFloat(n9);
+		        	f10 = Float.parseFloat(n10);
+		        	
+		        	result = f8*25 + f9*25 + f10*25 + (f4 + f5/readAll_sub.size() + f6 + f7);
+		        	String result_sub = n0+"#"+n1+"#"+result.toString();
+		        	table_sub.add(result_sub);
+	        	} catch(NumberFormatException error) {
+	        		System.out.println("error");
+	        	}
+	        }
+	        
+	        for(String[] line : readAll) {
+	        	String num0 = line[0];
+	        	String num1 = line[1];
+	        	String num2 = line[2];
+
+	        	num2 = num2.replaceAll("(\r\n|\r|\n|\n\r)", " ");
+	        	
+	        	if(num2.length() > 40)
+	        	num2 = num2.substring(0, 40);
+	        	
+	        	String num3 = line[3];
+	        	String num4 = line[4];
+	        	
+	        	for(String line2 : table_sub) {
+	        		String[] compare = line2.split("#");
+	        		System.out.println(compare[0]);
+	        		if(num0.equals(compare[0])) {
+	        			add(num0, num1, num2, compare[2], compare[1]);
+	        			break;
+	        		}
+	        	}
+	        }
+	        
 	        try{
 	            br = Files.newBufferedReader(Paths.get(file.getPath()));
 	            String line = "";
-	            
-	            while((line = br.readLine()) != null){
-	                //CSV 1행을 저장하는 리스트
-	                List<String> tmpList = new ArrayList<String>();
-	                String array[] = line.split(",");
-	                String num1 = array[0];
-	                String num2 = array[1];
-	                String num3 = array[2];
-	                String num4 = array[3];
-	                String num5 = array[4];
-	                
-	                add(num1, num2, num3, num4, num5);
-	                //배열에서 리스트 반환
-	                tmpList = Arrays.asList(array);
-	                String str = String.join(", ", tmpList); 
-	                
-	                ret.add(tmpList);
-	            }
+	           
 	            original_list = list;
 				tableView.setItems(list);
 	        }catch(FileNotFoundException error){
