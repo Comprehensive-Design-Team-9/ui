@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.popup">
+   <children>
+      <Pane layoutX="14.0" layoutY="41.0" prefHeight="345.0" prefWidth="335.0" style="-fx-border-color: black;">
+         <children>
+            <ImageView fx:id="show" fitHeight="288.0" fitWidth="333.0" layoutX="1.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+            <Pagination fx:id="pagination" layoutX="1.0" prefHeight="345.0" prefWidth="333.0" />
+         </children></Pane>
+      <Label layoutX="14.0" layoutY="14.0" text="이미지" />
+      <Label layoutX="362.0" layoutY="14.0" text="출처" />
+      <Label layoutX="362.0" layoutY="79.0" text="내용" />
+      <TextArea fx:id="content1" layoutX="362.0" layoutY="102.0" prefHeight="96.0" prefWidth="224.0" />
+      <Label layoutX="363.0" layoutY="205.0" text="tmi_words" />
+      <TextArea fx:id="tmi_words" editable="false" layoutX="363.0" layoutY="231.0" prefHeight="19.0" prefWidth="224.0" />
+      <TextArea fx:id="similar_sentence" editable="false" layoutX="364.0" layoutY="290.0" prefHeight="19.0" prefWidth="224.0" />
+      <Label layoutX="364.0" layoutY="265.0" text="similar_sentence" />
+      <Label layoutX="365.0" layoutY="324.0" text="image_similarity" />
+      <TextArea fx:id="image_similarity" editable="false" layoutX="364.0" layoutY="349.0" prefHeight="19.0" prefWidth="224.0" />
+      <Hyperlink fx:id="content" layoutX="361.0" layoutY="42.0" text="Hyperlink" />
+   </children>
+</Pane>
