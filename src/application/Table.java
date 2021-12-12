@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 
 public class Table {
 
+	private StringProperty num;
     private StringProperty title;
     private StringProperty source;
     private StringProperty content;
@@ -14,6 +15,7 @@ public class Table {
     private StringProperty logo;
     
     public Table() {
+    	this.num = num;
         this.title = title;
         this.source = source;
         this.content = content;
@@ -21,13 +23,14 @@ public class Table {
         this.logo = logo;
     }
     
-    public Table(StringProperty title, StringProperty source, StringProperty content, StringProperty percent, StringProperty logo) {
+    public Table(StringProperty num, StringProperty title, StringProperty source, StringProperty content, StringProperty logo, StringProperty percent) {
     	super();
+    	this.num = num;
         this.title = title;
         this.source = source;
         this.content = content;
-        this.percent = percent;
         this.logo = logo;
+        this.percent = percent;
     }
 
     public StringProperty getTitle() {
@@ -70,17 +73,25 @@ public class Table {
         this.logo.set(logo);
     }
     
+    public StringProperty getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.logo.set(num);
+    }
+    
     @Override
 	public String toString() {
  
 		StringBuilder str = new StringBuilder();
+		str.append("num=").append(num).append(", ");
 		str.append("title=").append(title).append(", ");
 		str.append("source=").append(source).append(", ");
 		str.append("content=").append(content).append(", ");
 		str.append("percent=").append(percent).append(", ");
 		str.append("logo=").append(logo);
 
- 
 		return str.toString();
 	}
 

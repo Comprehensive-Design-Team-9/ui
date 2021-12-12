@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
 
+
 public class Main extends Application{
  
     public static void main(String[] args) {
@@ -26,10 +27,11 @@ public class Main extends Application{
        Parent root = FXMLLoader.load(getClass().getResource("root.fxml"));
        Scene scene = new Scene(root);
        
-       primaryStage.setTitle("hi");
+       primaryStage.setTitle("");
        primaryStage.setResizable(false);
        primaryStage.setScene(scene);
        scene.getStylesheets().add(getClass().getResource("application.css").toString());
+    
 
        primaryStage.show();
     }

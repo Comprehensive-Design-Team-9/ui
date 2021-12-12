@@ -8,7 +8,7 @@ module javafx {
 	requires jdk.jartool;
 	requires commons.exec;
 	requires java.sql;
-	
+	requires java.desktop;
 	
 	opens application to javafx.graphics, javafx.fxml;
 	exports application;
